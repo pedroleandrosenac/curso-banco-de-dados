@@ -38,6 +38,14 @@
 
     --shadow:        0 2px 12px rgba(29,79,145,0.10);
     --radius:        7px;
+
+    /* novas — neutras, derivadas da mesma paleta */
+    --bg-zebra:       #f5f8fd;
+    --code-border:    #1a2a4a;
+    --code-inline-bg: #e8eef8;
+    --code-inline-fg: #1d4f91;
+    --font-code:      "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --font-text:      "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 /* ── Variáveis Dark ─────────────────────────────────────────────────────────── */
@@ -72,6 +80,11 @@
     --footer-fg:     #8ba4c8;
 
     --shadow:        0 2px 16px rgba(0,0,0,0.4);
+
+    --bg-zebra:       #1b2840;
+    --code-border:    #25395a;
+    --code-inline-bg: #1f3050;
+    --code-inline-fg: #93c5fd;
 }
 
 /* ── Reset ──────────────────────────────────────────────────────────────────── */
@@ -79,15 +92,28 @@
 
 /* ── Body ───────────────────────────────────────────────────────────────────── */
 body {
-    font-family: "Nunito", sans-serif;
+    font-family: var(--font-text);
     background-color: var(--bg-page);
     color: var(--text-main);
+    max-width: 960px;               /* linha de leitura confortável em telas grandes */
+    margin: 0 auto;
     padding: 24px 24px 60px 24px;
     overflow-x: hidden;
+    overflow-wrap: anywhere;        /* palavra muito longa quebra em vez de estourar a tela */
+    word-wrap: break-word;
     transition: background-color 0.3s, color 0.3s;
 }
 
 a { color: var(--senac-mid); }
+[data-theme="dark"] a { color: var(--blue); }
+
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--senac-orange);
+    outline-offset: 2px;
+}
+
+img { max-width: 100%; }
 
 /* ── Botão toggle dark/light ────────────────────────────────────────────────── */
 #senac-theme-toggle {
@@ -99,7 +125,7 @@ a { color: var(--senac-mid); }
     border: 1.5px solid var(--border);
     border-radius: 50px;
     padding: 6px 14px;
-    font-family: "Nunito", sans-serif;
+    font-family: var(--font-text);
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--text-main);
@@ -130,20 +156,52 @@ a { color: var(--senac-mid); }
 /* ── Tipografia ─────────────────────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 800;
+    line-height: 1.3;
     margin: 22px 0 10px;
     padding-left: 12px;
     border-left: 4px solid var(--senac-orange);
     color: var(--text-main);
     border-radius: 0;
 }
+h1 { font-size: 1.7rem; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.2rem; }
+h4 { font-size: 1.05rem; }
+h5, h6 { font-size: 0.95rem; }
 
 p, article {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     line-height: 1.75;
     margin: 10px 0;
     padding-left: 12px;
     border-left: 3px solid var(--border);
     color: var(--text-muted);
+}
+
+/* destaque dentro de texto corrido */
+p strong, li strong, article strong {
+    color: var(--text-main);
+    font-weight: 800;
+}
+
+hr {
+    border: 0;
+    border-top: 1.5px dashed var(--border);
+    margin: 26px 0;
+}
+
+/* ── Código inline (<code> fora de bloco de código) ─────────────────────────── */
+code {
+    font-family: var(--font-code);
+    font-size: 0.86em;
+    font-weight: 600;
+    background: var(--code-inline-bg);
+    color: var(--code-inline-fg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
 }
 
 /* ── Lista não ordenada ────────────────────────────────────────────────────── */
@@ -155,7 +213,7 @@ ul {
 }
 ul li {
     position: relative;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     line-height: 1.75;
     padding-left: 22px;
     color: var(--text-muted);
@@ -177,15 +235,116 @@ ul ul li::before {
     color: var(--senac-mid);
 }
 
+/* ── Lista ordenada (passo a passo) ────────────────────────────────────────── */
+ol {
+    list-style: none;
+    counter-reset: passo;
+    margin: 10px 0;
+    padding-left: 12px;
+    border-left: 3px solid var(--border);
+}
+ol > li {
+    counter-increment: passo;
+    position: relative;
+    font-size: 0.95rem;
+    line-height: 1.75;
+    padding-left: 36px;
+    margin: 6px 0;
+    color: var(--text-muted);
+}
+ol > li::before {
+    content: counter(passo);
+    position: absolute;
+    left: 2px;
+    top: 3px;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--senac-orange);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* ── Tabelas (conceitos, tipos de dados, resultado de consultas) ───────────── */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.9rem;
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow);
+}
+caption {
+    caption-side: top;
+    text-align: left;
+    padding: 0 2px 8px;
+    font-weight: 800;
+    color: var(--text-main);
+}
+th, td {
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    /* !important: unifica as tabelas antigas que têm padding/cor de borda no atributo style */
+    padding: 9px 14px !important;
+    border-bottom-color: var(--border) !important;
+}
+th {
+    background: var(--footer-bg);
+    color: var(--text-main);
+    font-weight: 800;
+    border-bottom-width: 2px !important;
+    border-bottom-color: var(--senac-orange) !important;
+}
+tbody tr:nth-child(even) td,
+tr:nth-child(even) td { background: var(--bg-zebra); }
+tr:last-child td { border-bottom: 0; }
+td strong { color: var(--text-main); }
+
+/* resultado de consulta SQL: fonte de código e visual mais compacto */
+table.resultado {
+    width: auto;
+    min-width: 50%;
+    font-family: var(--font-code);
+    font-size: 0.82rem;
+}
+table.resultado th,
+table.resultado td { padding: 7px 14px !important; }
+
+/* tabela larga (ex.: resultado de SELECT): envolva em <div class="tabela-scroll">
+   e, em tela pequena, ela rola para o lado em vez de estourar a página */
+.tabela-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    margin: 16px 0;
+}
+.tabela-scroll table {
+    margin: 0;
+    box-shadow: none;
+}
+
 pre {
     margin: 14px 0;
     padding-left: 12px;
     border-left: 3px solid var(--senac-mid);
+    font-family: var(--font-code);
+    font-size: 0.84rem;
+    line-height: 1.65;
+    tab-size: 4;
+    -moz-tab-size: 4;
+    overflow-x: auto;
 }
 
 /* ── Tag / badge ────────────────────────────────────────────────────────────── */
 .tag {
-    font-family: "Source Code Pro", monospace;
+    font-family: var(--font-code);
     font-size: 0.72rem;
     font-weight: 600;
     color: #fff;
@@ -217,7 +376,8 @@ pre {
 
 /* ── Trigger / alertas ──────────────────────────────────────────────────────── */
 .trigger {
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
     padding: 12px 16px;
     border-radius: var(--radius);
     margin: 14px 0;
@@ -229,7 +389,7 @@ pre {
 .trigger small {
     display: block;
     margin-top: 5px;
-    font-family: "Source Code Pro", monospace;
+    font-family: var(--font-code);
     font-size: 0.7rem;
     font-weight: 400;
     opacity: 0.75;
@@ -239,37 +399,76 @@ pre {
 .trigger.error   { background: var(--trigger-error-bg);   color: var(--trigger-error-fg);   border-color: var(--red); }
 .trigger.info    { background: var(--trigger-info-bg);    color: var(--trigger-info-fg);    border-color: var(--blue); }
 
+/* code inline dentro do alerta herda a cor do alerta */
+.trigger code {
+    background: rgba(0, 0, 0, 0.07);
+    border-color: transparent;
+    color: inherit;
+}
+[data-theme="dark"] .trigger code { background: rgba(255, 255, 255, 0.1); }
+
 /* ── Bloco de código ────────────────────────────────────────────────────────── */
 .code {
-    font-family: "Source Code Pro", monospace;
-    font-size: 0.8rem;
+    font-family: var(--font-code);
+    font-size: 0.84rem;
     background: var(--bg-code);
     color: var(--text-code);
-    padding: 18px 20px;
+    padding: 16px 20px;
+    margin: 14px 0;
+    border: 1px solid var(--code-border);
     border-radius: var(--radius);
-    line-height: 1.7;
+    box-shadow: var(--shadow);
+    line-height: 1.65;
+    tab-size: 4;                    /* tab = 4 espaços (o padrão do navegador é 8) */
+    -moz-tab-size: 4;
+    white-space: pre;               /* preserva a indentação; linha longa rola em vez de quebrar */
     overflow-x: auto;
-    white-space: pre-wrap;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
+.code::-webkit-scrollbar { height: 8px; }
+.code::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 4px; }
 .code *:first-child { margin-top: 0; }
+
+/* <code> e <pre> dentro de .code: sem o visual de código inline */
+.code code,
+pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    white-space: inherit;
+}
+.code pre {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+}
 
 /* ── Linha de sessão ────────────────────────────────────────────────────────── */
 .line {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    display: block;                 /* texto corre normalmente e quebra de linha só se precisar */
     padding: 10px 16px;
     margin: 24px 0;
     background: var(--bg-line);
+    border: 0;
     border-radius: var(--radius);
     border-left: 4px solid var(--senac-orange);
-    font-family: "Source Code Pro", monospace;
+    font-family: var(--font-code);
     font-size: 0.8rem;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.9);
+    white-space: normal;            /* títulos de sessão podem quebrar linha */
+    box-shadow: none;
 }
 .line::before {
     content: "▶";
+    display: inline-block;
+    margin-right: 10px;
+    vertical-align: 1px;
     color: var(--senac-orange);
     font-size: 0.6rem;
 }
@@ -292,7 +491,7 @@ form input, form select, form textarea {
     width: 100%;
     padding: 10px 12px;
     font-size: 0.9rem;
-    font-family: "Nunito", sans-serif;
+    font-family: var(--font-text);
     border: 1.5px solid var(--border);
     border-radius: var(--radius);
     margin: 8px 0;
@@ -315,7 +514,7 @@ form button {
     padding: 12px;
     font-size: 0.95rem;
     font-weight: 800;
-    font-family: "Nunito", sans-serif;
+    font-family: var(--font-text);
     border-radius: var(--radius);
     margin: 10px 0 0;
     cursor: pointer;
@@ -345,9 +544,11 @@ form label {
     padding: 18px 20px;
     border-radius: var(--radius);
     border-left: 4px solid var(--senac-orange);
+    tab-size: 4;
+    -moz-tab-size: 4;
 }
 .xdebug-var-dump * {
-    font-family: "Source Code Pro", monospace;
+    font-family: var(--font-code);
     font-size: 0.78rem;
     margin: 0;
 }
@@ -361,6 +562,26 @@ form label {
     text-align: center;
     font-size: 0.75rem;
     color: var(--footer-fg);
-    font-family: "Source Code Pro", monospace;
+    font-family: var(--font-code);
     border-top: 2px solid var(--senac-orange);
+}
+
+/* ── Telas pequenas (celular / janela estreita) ────────────────────────────── */
+@media (max-width: 640px) {
+    body { padding: 16px 14px 48px 14px; }
+    .code { padding: 14px; font-size: 0.8rem; }
+    .col2 { flex-direction: column; }
+    .col2 input { flex-basis: auto; }
+    table { font-size: 0.82rem; }
+    th, td { padding: 7px 9px !important; }
+    table.resultado th,
+    table.resultado td { padding: 6px 9px !important; }   /* precisa repetir: a regra da .resultado é mais específica */
+}
+
+/* ── Telas muito pequenas (320–360px) ──────────────────────────────────────── */
+@media (max-width: 360px) {
+    table { font-size: 0.78rem; }
+    th, td { padding: 6px 6px !important; }
+    table.resultado th,
+    table.resultado td { padding: 5px 6px !important; }
 }

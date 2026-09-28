@@ -27,11 +27,12 @@ ini_set('xdebug.overload_var_dump', 1);
  */
 $senacBase = str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', realpath(__DIR__));
 $senacBase = str_replace('\\', '/', $senacBase);
-echo "<link rel='stylesheet' href='{$senacBase}/senac.css'/>",
-    "<link rel='icon' href='{$senacBase}/Senac_logo.svg.png'/>",
-    "<img class='logosenac' src='{$senacBase}/Senac_logo.svg.png'/>",
-    "<button id='senac-theme-toggle' onclick='senacToggleTheme()'>🌙 Dark</button>",
-    "<script>
+echo "<meta name='viewport' content='width=device-width, initial-scale=1'/>",
+"<link rel='stylesheet' href='{$senacBase}/senac.css'/>",
+"<link rel='icon' href='{$senacBase}/Senac_logo.svg.png'/>",
+"<img class='logosenac' src='{$senacBase}/Senac_logo.svg.png'/>",
+"<button id='senac-theme-toggle' onclick='senacToggleTheme()'>🌙 Dark</button>",
+"<script>
         (function() {
             var saved = localStorage.getItem('senac-theme');
             if (saved) {
@@ -55,6 +56,15 @@ echo "<link rel='stylesheet' href='{$senacBase}/senac.css'/>",
                 btn.innerHTML = '☀️ Light';
             }
         }
+
+        /* remove a linha em branco que sobra no começo/fim dos blocos .code */
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.code:not(.line)').forEach(function(el) {
+                var primeiro = el.firstChild, ultimo = el.lastChild;
+                if (primeiro && primeiro.nodeType === 3) primeiro.nodeValue = primeiro.nodeValue.replace(/^\\s*\\n/, '');
+                if (ultimo && ultimo.nodeType === 3) ultimo.nodeValue = ultimo.nodeValue.replace(/\\s+\$/, '');
+            });
+        });
     </script>";
 /**
  * [ Title Function ] Cria o título da aula para o browser
